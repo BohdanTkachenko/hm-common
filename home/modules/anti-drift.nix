@@ -19,9 +19,12 @@ let
       baseline = "${target}.nix-baseline";
       driftFile = "${cfg.driftDir}/${flatDriftName path}";
       jqDelPaths = lib.concatMapStringsSep ", " (p: if lib.hasPrefix "." p then p else ".${p}") opts.preserve;
+      # $target is --slurpfile (an array holding the parsed file): jq >= 1.8
+      # removed --argfile, and a plain $target here silently fell back to the
+      # cp branch below, wiping every preserved key on each activation.
       jqMergePaths = lib.concatMapStringsSep " | " (p:
         let pathStr = if lib.hasPrefix "." p then p else ".${p}";
-        in "if ($target${pathStr} != null) then ${pathStr} = $target${pathStr} else . end"
+        in "if ($target[0]${pathStr} != null) then ${pathStr} = $target[0]${pathStr} else . end"
       ) opts.preserve;
       normalize = if opts.json then
         if opts.preserve != [ ] then
@@ -68,7 +71,10 @@ let
       # Copy new version and update baseline
       ${if opts.json && opts.preserve != [ ] then ''
         if [ -f "${target}" ]; then
-          $jq --argfile target "${target}" '${jqMergePaths}' "${opts.source}" > "${target}.tmp" 2>/dev/null || run cp "${opts.source}" "${target}.tmp"
+          if ! $jq --slurpfile target "${target}" '${jqMergePaths}' "${opts.source}" > "${target}.tmp" 2>/dev/null; then
+            noteEcho "anti-drift: preserve merge failed for ~/${path}; installing source without preserved keys"
+            run cp "${opts.source}" "${target}.tmp"
+          fi
         else
           run cp "${opts.source}" "${target}.tmp"
         fi
