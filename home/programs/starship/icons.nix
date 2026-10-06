@@ -1,0 +1,74 @@
+# Nerd Font Icons
+
+{ ... }:
+{
+  programs.starship.settings = {
+    c.symbol = " ";
+    cmake.symbol = " ";
+    conda.symbol = " ";
+    cpp.symbol = " ";
+    dart.symbol = " ";
+    directory.read_only = " 󰌾";
+    docker_context.symbol = " ";
+    gcloud.symbol = " ";
+    git_branch.symbol = " ";
+    git_commit.tag_symbol = "  ";
+    golang.symbol = " ";
+    hg_branch.symbol = " ";
+    hostname.ssh_symbol = " ";
+    java.symbol = " ";
+    kotlin.symbol = " ";
+    memory_usage.symbol = "󰍛 ";
+    meson.symbol = "󰔷 ";
+    nix_shell.symbol = " ";
+    nodejs.symbol = " ";
+    os.symbols.AlmaLinux = " ";
+    os.symbols.Alpine = " ";
+    os.symbols.Amazon = " ";
+    os.symbols.Android = " ";
+    os.symbols.Arch = " ";
+    os.symbols.Artix = " ";
+    os.symbols.CentOS = " ";
+    os.symbols.Debian = " ";
+    os.symbols.DragonFly = " ";
+    os.symbols.EndeavourOS = " ";
+    os.symbols.Fedora = " ";
+    os.symbols.FreeBSD = " ";
+    os.symbols.Garuda = " ";
+    os.symbols.Gentoo = " ";
+    os.symbols.Illumos = " ";
+    os.symbols.Kali = " ";
+    os.symbols.Linux = "󰌽 ";
+    os.symbols.Macos = " ";
+    os.symbols.Manjaro = " ";
+    os.symbols.MidnightBSD = " ";
+    os.symbols.Mint = "󰣭 ";
+    os.symbols.NixOS = " ";
+    os.symbols.Nobara = " ";
+    os.symbols.OpenBSD = " ";
+    os.symbols.OpenCloudOS = " ";
+    os.symbols.openEuler = "󰏒 ";
+    os.symbols.openSUSE = " ";
+    os.symbols.OracleLinux = " ";
+    os.symbols.Pop = " ";
+    os.symbols.Raspbian = " ";
+    os.symbols.Redhat = " ";
+    os.symbols.RedHatEnterprise = " ";
+    os.symbols.RockyLinux = " ";
+    os.symbols.Solus = " ";
+    os.symbols.SUSE = " ";
+    os.symbols.Ubuntu = " ";
+    os.symbols.Unknown = " ";
+    os.symbols.Void = " ";
+    os.symbols.Windows = " ";
+    package.symbol = "󰏗 ";
+    perl.symbol = " ";
+    python.symbol = " ";
+    ruby.symbol = " ";
+    rust.symbol = "󱘗 ";
+    scala.symbol = " ";
+    status.symbol = " ";
+    swift.symbol = " ";
+    terraform.symbol = " ";
+  };
+}
