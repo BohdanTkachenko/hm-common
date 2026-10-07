@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs-unstable,
   # Optional so consumers without the antigravity package set (work machines)
@@ -57,7 +58,7 @@ let
     if pkgs-antigravity-cli != null then
       mkAskAiScript {
         name = "ask";
-        exe = "${pkgs-antigravity-cli.antigravity-cli}/bin/agy";
+        exe = "${config.my.antigravity.cli.package or pkgs-antigravity-cli.antigravity-cli}/bin/agy";
         args = [
           "-p"
           "Respond to the piped input: answer its ## Request, using its ## Input Data section if present. Output only the response, no preamble."

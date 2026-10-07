@@ -168,6 +168,9 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
+          antigravity-standalone = import ./tests/antigravity-standalone.nix {
+            inherit pkgs home-manager;
+          };
           work-safe-home = import ./tests/work-safe-home.nix {
             inherit self pkgs home-manager;
             lib = pkgs.lib;

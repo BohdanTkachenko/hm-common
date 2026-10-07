@@ -60,6 +60,16 @@ that imports this one.
 - `nixosModules.overlays` — the overlays as a module, for NixOS hosts with
   `home-manager.useGlobalPkgs`.
 
+## Self-updating Antigravity CLI
+
+Linux consumers can set `my.antigravity.cli.standalone.enable = true` to use
+the native self-updating CLI. A user service bootstraps the executable from
+the official release manifest and verifies its SHA512 checksum. The mutable
+binary lives in `~/.local/share/antigravity-cli/agy`; the managed `agy` launcher
+is available through both the Home Manager profile and `~/.local/bin`.
+Shell profiles and existing CLI settings are preserved, and `ask` uses the
+same launcher. The default remains the Nix-packaged CLI.
+
 ## Checks
 
 `nix flake check` runs:
@@ -67,3 +77,5 @@ that imports this one.
 - `work-safe-home` — the evaluated profile installs no non-Google AI tooling
   and no host-specific SSH config.
 - `no-other-ai` — no file mentions other AI tooling or private addresses.
+- `antigravity-standalone` — verifies checksum rejection, safe replacement,
+  launcher routing, and idempotent installation without network access.
