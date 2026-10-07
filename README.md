@@ -69,6 +69,7 @@ binary lives in `~/.local/share/antigravity-cli/agy`; the managed `agy` launcher
 is available through both the Home Manager profile and `~/.local/bin`.
 Shell profiles and existing CLI settings are preserved, and `ask` uses the
 same launcher. The default remains the Nix-packaged CLI.
+NixOS consumers need `programs.nix-ld.enable = true` for the native binary.
 
 ## Checks
 

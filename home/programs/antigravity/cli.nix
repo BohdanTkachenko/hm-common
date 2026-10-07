@@ -27,7 +27,8 @@ in
         preserve = [
           "trustedWorkspaces"
           "permissions"
-        ];
+        ]
+        ++ lib.optional cfg.standalone.enable "enableTelemetry";
         source = (pkgs.formats.json { }).generate "antigravity-cli-settings.json" {
           colorScheme = "dark";
           enableTelemetry = false;
