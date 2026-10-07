@@ -18,7 +18,6 @@ let
     dirname = null;
     du = null;
     echo = null;
-    env = null;
     eza = null;
     fd = null;
     file = null;
@@ -113,12 +112,10 @@ let
       "explain"
       "list"
       "outdated"
-      "run"
       "search"
       "test"
       "view"
     ];
-    npx = null;
 
     # Jujutsu (read-only)
     jj = [
