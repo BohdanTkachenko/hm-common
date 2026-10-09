@@ -28,12 +28,6 @@
           "C-down" = "C-pagedown";
         };
       }
-      {
-        name = "Disable mouse middle click";
-        remap = {
-          BTN_MIDDLE = "KEY_RESERVED";
-        };
-      }
     ];
   };
 }
