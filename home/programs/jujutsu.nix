@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  pkgs-unstable,
   ...
 }:
 let
@@ -13,10 +12,6 @@ in
 
   programs.jujutsu = {
     enable = true;
-    # Stable jujutsu (pkgs.jujutsu, 0.41+) provides `jj bookmark advance` and
-    # `revsets.bookmark-advance-to`, so tracking unstable is no longer needed
-    # and avoids costly from-source rebuilds on cache misses.
-    package = lib.mkDefault pkgs.jujutsu;
     settings = {
       ui.diff-formatter = ":git";
       # NixOS sets PAGER=less globally; without explicit flags jj inherits
