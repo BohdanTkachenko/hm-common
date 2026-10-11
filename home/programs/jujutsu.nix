@@ -13,12 +13,10 @@ in
 
   programs.jujutsu = {
     enable = true;
-    # Track jj from unstable: the push-git alias below relies on `jj bookmark
-    # advance` (+ the `revsets.bookmark-advance-to` setting), which landed after
-    # the last stable release — stable jj breaks that workflow. Tradeoff:
-    # unstable jj often isn't in the binary cache (esp. aarch64), so it builds
-    # from source on rebuilds that bump the unstable input.
-    package = pkgs-unstable.jujutsu;
+    # Stable jujutsu (pkgs.jujutsu, 0.41+) provides `jj bookmark advance` and
+    # `revsets.bookmark-advance-to`, so tracking unstable is no longer needed
+    # and avoids costly from-source rebuilds on cache misses.
+    package = lib.mkDefault pkgs.jujutsu;
     settings = {
       ui.diff-formatter = ":git";
       # NixOS sets PAGER=less globally; without explicit flags jj inherits
