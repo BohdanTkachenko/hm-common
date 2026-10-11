@@ -77,7 +77,7 @@ let
       ''}
       run rm -f "${target}" "${baseline}"
       run mv "${target}.tmp" "${target}"
-      run chmod 644 "${target}"
+      run chmod ${opts.mode} "${target}"
       # A copy, not a symlink: the source may be a mutable path (secret-manager
       # templates live at a fixed location that setupSops rewrites before this
       # runs), and a symlink to that resolves to the *new* content at the next
@@ -99,6 +99,11 @@ in
         source = lib.mkOption {
           type = with lib.types; either path str;
           description = "Nix store path or absolute path to copy from";
+        };
+        mode = lib.mkOption {
+          type = lib.types.strMatching "[0-7]{3,4}";
+          default = "644";
+          description = "Permissions of the installed copy, e.g. \"600\" for a file its program requires to be private";
         };
         json = lib.mkOption {
           type = lib.types.bool;
