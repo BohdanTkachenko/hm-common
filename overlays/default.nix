@@ -7,7 +7,6 @@
   imports = [
     ../home/modules/options.nix
     ./google-chrome.nix
-    ./riff-overlay.nix
     ./search-light-overlay.nix
   ];
 }
