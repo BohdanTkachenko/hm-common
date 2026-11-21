@@ -61,18 +61,7 @@
         { package = search-light; }
         { package = tiling-shell; }
         { package = bing-wallpaper-changer; }
-        {
-          # The stock extension refreshes its effect synchronously on texture
-          # `size-changed`, which mutter emits mid-paint when a window
-          # maximizes or goes fullscreen (e.g. a Chrome PWA starting a Meet
-          # call). Removing the effect there aborts gnome-shell in Clutter.
-          # Defer the refresh to the next frame. No upstream fix as of v18.
-          package = rounded-window-corners-reborn.overrideAttrs (old: {
-            patches = (old.patches or [ ]) ++ [
-              ./gnome-patches/rounded-window-corners-defer-size-refresh.patch
-            ];
-          });
-        }
+        { package = rounded-window-corners-reborn; }
       ];
     };
 
@@ -94,6 +83,42 @@
 
       "org/gnome/shell/extensions/caffeine" = {
         show-notifications = false;
+      };
+
+      # By default the extension removes its effect when a window maximizes or
+      # goes fullscreen. It does that from a texture `size-changed` signal that
+      # mutter emits mid-paint during the shell's resize animation, and
+      # removing an effect mid-paint aborts gnome-shell in Clutter (seen when a
+      # Chrome PWA such as Google Meet starts a call). Keeping the effect on
+      # maximized/fullscreen windows means it is never removed on resize. The
+      # dictionary replaces the whole default, so every key is spelled out
+      # with the extension's v18 defaults.
+      "org/gnome/shell/extensions/rounded-window-corners-reborn" = {
+        global-rounded-corner-settings =
+          let
+            entry = key: value: mkDictionaryEntry [ key (mkVariant value) ];
+          in
+          [
+            (entry "padding" [
+              (entry "left" (mkUint32 1))
+              (entry "right" (mkUint32 1))
+              (entry "top" (mkUint32 1))
+              (entry "bottom" (mkUint32 1))
+            ])
+            (entry "keepRoundedCorners" [
+              (entry "maximized" true)
+              (entry "fullscreen" true)
+            ])
+            (entry "borderRadius" (mkUint32 15))
+            (entry "smoothing" 0)
+            (entry "borderColor" [
+              0.5
+              0.5
+              0.5
+              1.0
+            ])
+            (entry "enabled" true)
+          ];
       };
 
       "org/gnome/shell/extensions/bingwallpaper" = {
