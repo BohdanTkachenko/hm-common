@@ -61,7 +61,18 @@
         { package = search-light; }
         { package = tiling-shell; }
         { package = bing-wallpaper-changer; }
-        { package = rounded-window-corners-reborn; }
+        {
+          # The stock extension refreshes its effect synchronously on texture
+          # `size-changed`, which mutter emits mid-paint when a window
+          # maximizes or goes fullscreen (e.g. a Chrome PWA starting a Meet
+          # call). Removing the effect there aborts gnome-shell in Clutter.
+          # Defer the refresh to the next frame. No upstream fix as of v18.
+          package = rounded-window-corners-reborn.overrideAttrs (old: {
+            patches = (old.patches or [ ]) ++ [
+              ./gnome-patches/rounded-window-corners-defer-size-refresh.patch
+            ];
+          });
+        }
       ];
     };
 
