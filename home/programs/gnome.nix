@@ -85,14 +85,47 @@
         show-notifications = false;
       };
 
-      # By default the extension removes its effect when a window maximizes or
-      # goes fullscreen. It does that from a texture `size-changed` signal that
-      # mutter emits mid-paint during the shell's resize animation, and
-      # removing an effect mid-paint aborts gnome-shell in Clutter (seen when a
-      # Chrome PWA such as Google Meet starts a call). Keeping the effect on
-      # maximized/fullscreen windows means it is never removed on resize. The
-      # dictionary replaces the whole default, so every key is spelled out
-      # with the extension's v18 defaults.
+      # WORKAROUND: rounded-window-corners crashes gnome-shell on maximize or
+      # fullscreen. Keep its effect on those windows so it is never removed.
+      #
+      # When a window maximizes or goes fullscreen, gnome-shell's resize
+      # animation (windowManager.js `_prepareAnimationInfo`) snapshots the
+      # window with `actor.paint_to_content()`. While that paint runs, mutter
+      # emits `size-changed` on the window texture (and `notify::size` on the
+      # actor). The extension handles those signals synchronously in
+      # `refreshRoundedCorners()`; with the default settings a maximized or
+      # fullscreen window should not have rounded corners, so it calls
+      # `remove_effect_by_name()` right there, mid-paint. Clutter flags it
+      # (`clutter_actor_meta_real_set_actor: runtime check failed:
+      # (!priv->actor || !CLUTTER_ACTOR_IN_PAINT (priv->actor))`), keeps
+      # painting the now-detached effect, and aborts in
+      # `clutter_actor_node_new: assertion failed: (actor != NULL)`. That
+      # SIGABRT takes down the whole session. A Chrome PWA (Google Meet)
+      # starting a call triggers it every time; any window that resizes this
+      # way can.
+      #
+      # The removal is what crashes this path. With keepRoundedCorners on for
+      # both states, the extension's `shouldEnableEffect()` stays true across
+      # maximize/fullscreen, so the size-change handler only updates shader
+      # uniforms and never removes the effect. Cost: maximized and fullscreen
+      # windows keep 15px rounded corners. This does not cover the separate
+      # add-mid-paint path PR #144 describes (a null `metaWindow` leaving the
+      # handlers half-connected); that one was not seen here.
+      #
+      # Upstream (flexagoon/rounded-window-corners); main still runs these
+      # handlers synchronously as of 2026-11-21 (extension v18 packaged here):
+      # - https://github.com/flexagoon/rounded-window-corners/pull/144
+      #   diagnoses this exact path, naming the keepRoundedCorners.maximized
+      #   = false default; proposes deferring the handlers with GLib.idle_add.
+      #   Closed unmerged 2026-07-19.
+      # - https://github.com/flexagoon/rounded-window-corners/issues/115
+      #   Open; same pair of Clutter assertions, including on GNOME 50 with
+      #   extension v18.
+      # Drop this block (back to stock defaults) once the extension defers or
+      # guards effect removal in its size-change handlers.
+      #
+      # The key is a single a{sv}, so setting it replaces the whole default:
+      # every other entry is spelled out with the extension's v18 defaults.
       "org/gnome/shell/extensions/rounded-window-corners-reborn" = {
         global-rounded-corner-settings =
           let
